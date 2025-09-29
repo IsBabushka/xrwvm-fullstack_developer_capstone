@@ -32,7 +32,7 @@
   padding: 0.5rem 0;
 }
 
-.input_field {
+.register_input_field {
   height: 50px;
   width: 100%;
   padding: 0.8rem 1rem 0.8rem 2.8rem; /* Adjusted left padding to accommodate icon */
@@ -44,24 +44,24 @@
   background-color: #f9fafb;
 }
 
-.input_field:focus {
+.register_input_field:focus {
   border-color: #0a7a9c; /* Bright blue color */
   box-shadow: 0 0 0 3px rgba(12, 12, 12, 0.1);
   background-color: white;
 }
 
-.input_field::placeholder {
+.register_input_field::placeholder {
   color: #9ca3af;
 }
 
-.submit_panel {
+.register_submit_panel {
   display: flex;
   flex-direction: column;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
 }
 
-.submit {
+.register_submit {
   width: 100%;
   padding: 0.8rem;
   cursor: pointer;
@@ -76,13 +76,13 @@
   letter-spacing: 0.5px;
 }
 
-.submit:hover {/* Slightly darker blue on hover */
+.register_submit:hover {/* Slightly darker blue on hover */
   background-color: #0a7a9c;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(12, 12, 12, 0.25);
 }
 
-.submit:active {
+.register_submit:active {
   transform: translateY(0);
 }
 
@@ -128,7 +128,7 @@
 
 .img_icon {
   position: absolute;
-  left: 2.1rem; /* Adjusted position to align with input padding */
+  left: 1rem; /* Adjusted position to align with input padding */
   width: 20px;
   height: 20px;
   z-index: 1;

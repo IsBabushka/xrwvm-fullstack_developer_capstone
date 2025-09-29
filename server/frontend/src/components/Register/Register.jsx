@@ -64,31 +64,31 @@ const Register = () => {
         <div className="inputs">
           <div className="input">
             <img src={user_icon} className="img_icon" alt='Username'/>
-            <input type="text"  name="username" placeholder="Username" className="input_field" onChange={(e) => setUserName(e.target.value)} required/>
+            <input type="text"  name="username" placeholder="Username" className="register_input_field" onChange={(e) => setUserName(e.target.value)} required/>
           </div>
           <div className="input">
             <img src={user_icon} className="img_icon" alt='First Name'/>
-            <input type="text"  name="first_name" placeholder="First Name" className="input_field" onChange={(e) => setFirstName(e.target.value)} required/>
+            <input type="text"  name="first_name" placeholder="First Name" className="register_input_field" onChange={(e) => setFirstName(e.target.value)} required/>
           </div>
 
           <div className="input">
             <img src={user_icon} className="img_icon" alt='Last Name'/>
-            <input type="text"  name="last_name" placeholder="Last Name" className="input_field" onChange={(e) => setlastName(e.target.value)} required/>
+            <input type="text"  name="last_name" placeholder="Last Name" className="register_input_field" onChange={(e) => setlastName(e.target.value)} required/>
           </div>
 
           <div className="input">
             <img src={email_icon} className="img_icon" alt='Email'/>
-            <input type="email"  name="email" placeholder="Email" className="input_field" onChange={(e) => setEmail(e.target.value)} required/>
+            <input type="email"  name="email" placeholder="Email" className="register_input_field" onChange={(e) => setEmail(e.target.value)} required/>
           </div>
 
           <div className="input">
             <img src={password_icon} className="img_icon" alt='password'/>
-            <input name="psw" type="password"  placeholder="Password" className="input_field" onChange={(e) => setPassword(e.target.value)} required/>
+            <input name="psw" type="password"  placeholder="Password" className="register_input_field" onChange={(e) => setPassword(e.target.value)} required/>
           </div>
 
         </div>
-        <div className="submit_panel">
-          <input className="submit" type="submit" value="Register"/>
+        <div className="register_submit_panel">
+          <input className="register_submit" type="submit" value="Register"/>
         </div>
       </form>
       </div>
