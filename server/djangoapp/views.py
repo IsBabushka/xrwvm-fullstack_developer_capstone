@@ -13,7 +13,7 @@ from django.contrib.auth import login, authenticate
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
-# from .populate import initiate
+from .populate import initiate
 from .models import CarMake, CarModel
 
 
@@ -130,7 +130,7 @@ def initiate():
 
     for data in car_model_data:
       CarModel.objects.create(name=data['name'], type=data['type'], year=data['year'], car_make=data['car_make'])
-      
+
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
 # def get_dealerships(request):
