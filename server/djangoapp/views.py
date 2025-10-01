@@ -14,6 +14,8 @@ import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
 # from .populate import initiate
+from .models import CarMake, CarModel
+
 
 
 # Get an instance of a logger
@@ -76,8 +78,59 @@ def registration(request):
         data = {"userName":username,"error":"Already Registered"}
         return JsonResponse(data)
 
+def get_cars(request):
+    count = CarMake.objects.filter().count()
+    print(count)
 
+    if (count == 0):
+        initiate()
+    car_models = CarModel.objects.select_related('car_make').all()
+    cars = []
 
+    for car_model in car_models:
+        cars.append({
+            'CarModel': car_model.name,
+            'CarMake': car_model.car_make.name,
+        })
+    return JsonResponse({
+        'CarModels': cars,
+    })
+
+def initiate():
+    car_make_data = [
+        {"name":"NISSAN", "description":"Great cars. Japanese technology", "country":"Japan", "year_established":1933},
+        {"name":"Mercedes", "description":"Great cars. German technology", "country":"Germany", "year_established":1926},
+        {"name":"Audi", "description":"Great cars. German technology", "country":"Germany", "year_established":1909},
+        {"name":"Kia", "description":"Great cars. Korean technology", "country":"South Korea", "year_established":1941},
+        {"name":"Toyota", "description":"Great cars. Japanese technology", "country":"Japan", "year_established":1937},
+    ]
+
+    car_make_instances = []
+
+    for data in car_make_data:
+        car_make_instances.append(CarMake.objects.create(name=data['name'], description=data['description'], country=data['country'], year_established=data['year_established']))
+
+    car_model_data = [
+      {"name":"Pathfinder", "type":"SUV", "year": 2023, "car_make":car_make_instances[0]},
+      {"name":"Qashqai", "type":"SUV", "year": 2023, "car_make":car_make_instances[0]},
+      {"name":"XTRAIL", "type":"SUV", "year": 2023, "car_make":car_make_instances[0]},
+      {"name":"A-Class", "type":"SUV", "year": 2023, "car_make":car_make_instances[1]},
+      {"name":"C-Class", "type":"SUV", "year": 2023, "car_make":car_make_instances[1]},
+      {"name":"E-Class", "type":"SUV", "year": 2023, "car_make":car_make_instances[1]},
+      {"name":"A4", "type":"SUV", "year": 2023, "car_make":car_make_instances[2]},
+      {"name":"A5", "type":"SUV", "year": 2023, "car_make":car_make_instances[2]},
+      {"name":"A6", "type":"SUV", "year": 2023, "car_make":car_make_instances[2]},
+      {"name":"Sorrento", "type":"SUV", "year": 2023, "car_make":car_make_instances[3]},
+      {"name":"Carnival", "type":"SUV", "year": 2023, "car_make":car_make_instances[3]},
+      {"name":"Cerato", "type":"Sedan", "year": 2023, "car_make":car_make_instances[3]},
+      {"name":"Corolla", "type":"Sedan", "year": 2023, "car_make":car_make_instances[4]},
+      {"name":"Camry", "type":"Sedan", "year": 2023, "car_make":car_make_instances[4]},
+      {"name":"Kluger", "type":"SUV", "year": 2023, "car_make":car_make_instances[4]},
+    ]
+
+    for data in car_model_data:
+      CarModel.objects.create(name=data['name'], type=data['type'], year=data['year'], car_make=data['car_make'])
+      
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
 # def get_dealerships(request):
