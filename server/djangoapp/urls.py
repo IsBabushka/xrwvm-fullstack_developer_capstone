@@ -19,7 +19,7 @@ urlpatterns = [
     path(route='get_cars', view=views.get_cars, name = 'getcars'),
 
     # path for getting dealers
-    path(route='get_dealers', view=views.get_dealerships, name='get_dealers'),
+    path(route='get_dealers/', view=views.get_dealerships, name='get_dealers'),
     # path for getting dealers via state
     path(route='get_dealers/<str:state>', view=views.get_dealerships, name='get_dealers_by_state'),
 
