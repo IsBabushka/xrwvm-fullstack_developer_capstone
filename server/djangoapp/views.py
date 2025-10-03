@@ -1,13 +1,7 @@
 # Uncomment the required imports before adding the code
 
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import logout
-from django.contrib import messages
-from datetime import datetime
-
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
 import logging
@@ -15,7 +9,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 
 from .restapis import get_request, analyze_review_sentiments, post_review
-from .populate import initiate
+# from .populate import initiate
 from .models import CarMake, CarModel
 
 # Get an instance of a logger
@@ -40,6 +34,7 @@ def login_user(request):
         data = {"userName": username, "status": "Authenticated"}
     return JsonResponse(data)
 
+
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
     logout(request)
@@ -50,7 +45,7 @@ def logout_request(request):
 # Create a `registration` view to handle sign up request
 @csrf_exempt
 def registration(request):
-    
+
     data = json.loads(request.body)
     username = data['userName']
     password = data['password']
@@ -63,26 +58,33 @@ def registration(request):
         # Check if user already exists
         User.objects.get(username=username)
         username_exist = True
-    except:
+    except Exception:
         # If not, simply log this is a new user
         logger.debug("{} is new user".format(username))
     # If it is a new user
     if not username_exist:
         # Create user in auth_user table
-        user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,password=password, email=email)
+        user = User.objects.create_user(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            password=password,
+            email=email
+        )
         # Login the user and redirect to list page
         login(request, user)
-        data = {"userName":username,"status":"Authenticated"}
+        data = {"userName": username, "status": "Authenticated"}
         return JsonResponse(data)
-    else :
-        data = {"userName":username,"error":"Already Registered"}
+    else:
+        data = {"userName": username, "error": "Already Registered"}
         return JsonResponse(data)
+
 
 def get_cars(request):
     count = CarMake.objects.filter().count()
     print(count)
 
-    if (count == 0):
+    if count == 0:
         initiate()
     car_models = CarModel.objects.select_related('car_make').all()
     cars = []
@@ -96,88 +98,122 @@ def get_cars(request):
         'CarModels': cars,
     })
 
+
 def initiate():
     car_make_data = [
-        {"name":"NISSAN", "description":"Great cars. Japanese technology", "country":"Japan", "year_established":1933},
-        {"name":"Mercedes", "description":"Great cars. German technology", "country":"Germany", "year_established":1926},
-        {"name":"Audi", "description":"Great cars. German technology", "country":"Germany", "year_established":1909},
-        {"name":"Kia", "description":"Great cars. Korean technology", "country":"South Korea", "year_established":1941},
-        {"name":"Toyota", "description":"Great cars. Japanese technology", "country":"Japan", "year_established":1937},
+        {"name": "NISSAN", "description": "Great cars. Japanese technology",
+            "country": "Japan", "year_established": 1933},
+        {"name": "Mercedes", "description": "Great cars. German technology",
+            "country": "Germany", "year_established": 1926},
+        {"name": "Audi", "description": "Great cars. German technology",
+            "country": "Germany", "year_established": 1909},
+        {"name": "Kia", "description": "Great cars. Korean technology",
+            "country": "South Korea", "year_established": 1941},
+        {"name": "Toyota", "description": "Great cars. Japanese technology",
+            "country": "Japan", "year_established": 1937},
     ]
 
     car_make_instances = []
 
     for data in car_make_data:
-        car_make_instances.append(CarMake.objects.create(name=data['name'], description=data['description'], country=data['country'], year_established=data['year_established']))
+        car_make_instances.append(CarMake.objects.create(
+            name=data['name'],
+            description=data['description'],
+            country=data['country'],
+            year_established=data['year_established']
+        ))
 
     car_model_data = [
-      {"name":"Pathfinder", "type":"SUV", "year": 2023, "car_make":car_make_instances[0]},
-      {"name":"Qashqai", "type":"SUV", "year": 2023, "car_make":car_make_instances[0]},
-      {"name":"XTRAIL", "type":"SUV", "year": 2023, "car_make":car_make_instances[0]},
-      {"name":"A-Class", "type":"SUV", "year": 2023, "car_make":car_make_instances[1]},
-      {"name":"C-Class", "type":"SUV", "year": 2023, "car_make":car_make_instances[1]},
-      {"name":"E-Class", "type":"SUV", "year": 2023, "car_make":car_make_instances[1]},
-      {"name":"A4", "type":"SUV", "year": 2023, "car_make":car_make_instances[2]},
-      {"name":"A5", "type":"SUV", "year": 2023, "car_make":car_make_instances[2]},
-      {"name":"A6", "type":"SUV", "year": 2023, "car_make":car_make_instances[2]},
-      {"name":"Sorrento", "type":"SUV", "year": 2023, "car_make":car_make_instances[3]},
-      {"name":"Carnival", "type":"SUV", "year": 2023, "car_make":car_make_instances[3]},
-      {"name":"Cerato", "type":"Sedan", "year": 2023, "car_make":car_make_instances[3]},
-      {"name":"Corolla", "type":"Sedan", "year": 2023, "car_make":car_make_instances[4]},
-      {"name":"Camry", "type":"Sedan", "year": 2023, "car_make":car_make_instances[4]},
-      {"name":"Kluger", "type":"SUV", "year": 2023, "car_make":car_make_instances[4]},
+        {"name": "Pathfinder", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[0]},
+        {"name": "Qashqai", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[0]},
+        {"name": "XTRAIL", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[0]},
+        {"name": "A-Class", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[1]},
+        {"name": "C-Class", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[1]},
+        {"name": "E-Class", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[1]},
+        {"name": "A4", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[2]},
+        {"name": "A5", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[2]},
+        {"name": "A6", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[2]},
+        {"name": "Sorrento", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[3]},
+        {"name": "Carnival", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[3]},
+        {"name": "Cerato", "type": "Sedan", "year": 2023,
+            "car_make": car_make_instances[3]},
+        {"name": "Corolla", "type": "Sedan", "year": 2023,
+            "car_make": car_make_instances[4]},
+        {"name": "Camry", "type": "Sedan", "year": 2023,
+            "car_make": car_make_instances[4]},
+        {"name": "Kluger", "type": "SUV", "year": 2023,
+            "car_make": car_make_instances[4]},
     ]
 
     for data in car_model_data:
-      CarModel.objects.create(name=data['name'], type=data['type'], year=data['year'], car_make=data['car_make'])
-
+        CarModel.objects.create(
+            name=data['name'],
+            type=data['type'],
+            year=data['year'],
+            car_make=data['car_make']
+        )
 
 
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
 def get_dealerships(request, state='All'):
-    if (state == 'All'):
+    if state == 'All':
         endpoint = "/fetchDealers"
     else:
         endpoint = f'/fetchDealers/{state}'
-        
+
     dealerships = get_request(endpoint)
     return JsonResponse({'status': 200, 'dealers': dealerships})
 
 # Create a `get_dealer_reviews` view to render the reviews of a dealer
+
+
 def get_dealer_reviews(request, dealer_id):
     # if dealer id has been provided
-    if(dealer_id):
+    if dealer_id:
         endpoint = f'/fetchReviews/dealer/{str(dealer_id)}'
         reviews = get_request(endpoint)
         for review_detail in reviews:
             response = analyze_review_sentiments(review_detail['review'])
             print(response)
             review_detail['sentiment'] = response['sentiment']
-        return JsonResponse({"status":200,"reviews":reviews})
+        return JsonResponse({"status": 200, "reviews": reviews})
     else:
-        return JsonResponse({"status":400,"message":"Bad Request"})
-            
+        return JsonResponse({"status": 400, "message": "Bad Request"})
 
 
 # Create a `get_dealer_details` view to render the dealer details
 def get_dealer_details(request, dealer_id):
-    if(dealer_id):
+    if dealer_id:
         endpoint = f'/fetchDealer/{str(dealer_id)}'
         dealership = get_request(endpoint)
-        return JsonResponse({"status":200,"dealer":dealership})
+        return JsonResponse({"status": 200, "dealer": dealership})
     else:
-        return JsonResponse({"status":400,"message":"Bad Request"})
+        return JsonResponse({"status": 400, "message": "Bad Request"})
 
 
 # Create a `add_review` view to submit a review
 def add_review(request):
-    if (request.user.is_anonymous == False):
+    if not (request.user.is_anonymous):
         data = json.loads(request.body)
         try:
             response = post_review(data)
             return JsonResponse(response)
-        except:
-            return JsonResponse({'status': 401, 'message': 'Error in posting review'})
+        except Exception:
+            return JsonResponse({
+                'status': 401,
+                'message':
+                'Error in posting review'})
     else:
         return JsonResponse({'status': 403, 'message': 'Unauthorized'})
